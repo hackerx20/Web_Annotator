@@ -23,8 +23,8 @@
     "commands": {
         "HighlightText": {
             "suggested_key": {
-                "default": "Ctrl+Q",
-                "mac": "Command+Q"
+                "default": "Ctrl+Shift+H",
+                "mac": "Command+H"
             },
             "description": "Highlight selected text"
         },
