@@ -1,10 +1,13 @@
 # AnnotateMe
 Web Annotation chrome extension
 # What is Web Annotation?
-Web Annotation is a way of modifying information on a web resource without modifying the origional resource. It is like adding an extra layer to the origional creation, which can be seen by other users who know and understand the annotation system used.
+[Web Annotation](https://en.wikipedia.org/wiki/Web_annotation) is a way of modifying information on a web resource without modifying the origional resource. It is like adding an extra layer to the origional creation, which can be seen by other users who know and understand the annotation system used.
+
+# How Chrome-Extensions are built?
+You can build a Chrome web-extension by using the same web technologies that are used to create a web extension.[HTML](https://web.dev/learn/html), [CSS](https://web.dev/learn/css) and [JavaScript](https://developer.mozilla.org/en-US/docs/Learn/JavaScript). 
 
 # Steps for the installation of the CHROME-EXTENSION
-Step 1- Prepare the Extenison Files:- Ensure you have all te necessary files need for the chrome extension in the directory. (manifest.json,icons,scripts,popup.html,etc.) 
+Step 1- Prepare the Extenison Files:- Ensure you have all te necessary files need for the [chrome extension](https://developer.chrome.com/docs/extensions) in the directory. ([manifest.json](https://developer.chrome.com/docs/extensions/reference/manifest),icons,scripts,popup.html,etc.) 
 
 Step 2- Open Chrome Extension Page.
 
