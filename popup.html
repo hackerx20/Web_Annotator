@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="popup.css">
+    <title>AnnotateMe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="Heading">AnnotateMe</h1>
+    </div>
+    <div class="container">
+        <label for="highlightColor" class="highlightlabel">Highlight Color:</label>
+        <input type="color" id="highlightColor" name="highlightColor" value="#000000" />
+    </div>
+    <div class="container">
+        <ul class="Features">
+            <li><button class="myButton" id="Highlight"><img src="icons/highlighter(1).png" alt="highlighter"
+                        title="Highlighter"></button></li>
+            <li><button class="myButton" id="AddNote"><img src="icons/add(1).png" alt="Add Notes"
+                        title="Add Notes"></button></li>
+            <li class="lastButton" id="Save"><button class="myButton"><img src="icons/diskette.png" alt="Save"
+                        title="Save"></button></li>
+        </ul>
+    </div>
+    <div class="container Features">
+        <input type="search" class="searchinput" id="mySearch" placeholder="Search for something..">
+        <button class="myButton" id="Search"><img src="icons/research.png" alt="Search" title="Search"></button>
+    </div>
+    <div <button class="button-64" role="button" id="exportIcon"><span class="text"><b>Export Files</b></span></button>
+    </div>
+    <div>
+        <ul id="annotationItems"></ul>
+    </div>
+    <footer class="footer">
+        <p class="footer-header">
+            Instructions <i class="fa fa-chevron-up instructions-up"></i><i
+                class="fa fa-chevron-down instructions-down"></i>
+        </p>
+        <div class="instructions">
+            <ol>
+                <h4>Highlight</h4>
+                <li>Drag your cursor over text to select it</li>
+                <li>
+                    (Mac) Press
+                    <span style="text-decoration: underline">Command + Q</span> on keyboard
+                </li>
+                <li>
+                    (Desktop) Press
+                    <span style="text-decoration: underline">Ctrl + Q</span> on keyboard
+                </li>
+                <h4>Add Notes</h4>
+                <li>Drag your cursor over text to select it</li>
+                <li>
+                    (Mac) Press
+                    <span style="text-decoration: underline">Command + A</span> on keyboard
+                </li>
+                <li>
+                    (Desktop) Press
+                    <span style="text-decoration: underline">Ctrl + A</span> on keyboard
+                </li>
+                <h4>Save the Change made to the website</h4>
+                <li>
+                    <span style="text-decoration: underline">Press the Save Button</span>
+                </li>
+            </ol>
+            <p style="color: red; font-size: 11px">
+                * Cannot highlight across line breaks (such as two different
+                paragraphs or list items)
+            </p>
+        </div>
+    </footer>
+    <script src="popup.js"></script>
+</body>
+
+</html>

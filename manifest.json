@@ -1,0 +1,56 @@
+{
+    "manifest_version": 3,
+    "name": "AnnotateMe",
+    "version": "2",
+    "description": "Highlight and add notes to any text on the web with AnnotateMe",
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "storage",
+        "commands"
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icons/sticky-notes.png",
+            "48": "icons/pencil.png",
+            "128": "icons/note.png"
+        }
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "commands": {
+        "HighlightText": {
+            "suggested_key": {
+                "default": "Ctrl+Q",
+                "mac": "Command+Q"
+            },
+            "description": "Highlight selected text"
+        },
+        "AddNotes": {
+            "suggested_key": {
+                "default": "Ctrl+A",
+                "mac": "Command+A"
+            },
+            "description": "Add note to selected text"
+        }
+    },
+    "icons": {
+        "16": "icons/sticky-notes.png",
+        "48": "icons/pencil.png",
+        "128": "icons/note.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "run_at": "document_end",
+            "js": [
+                "content.js"
+            ],
+            "css": ["popup.css"]
+        }
+    ]
+}
