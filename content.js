@@ -1,3 +1,4 @@
+
 chrome.runtime.onMessage.addListener((msg, src, reply) => {
     switch (msg.action) {
         case 'HighlightText':
@@ -9,6 +10,7 @@ chrome.runtime.onMessage.addListener((msg, src, reply) => {
     }
 });
 
+
 function highlightSelectedText(color) {
     const userSelection = window.getSelection();
     if (!userSelection.rangeCount) {
@@ -18,20 +20,21 @@ function highlightSelectedText(color) {
 
     const textRange = userSelection.getRangeAt(0);
     const selectedText = textRange.toString();
+    alert('Done Highlight.');
 
     if (selectedText) {
         const highlightSpan = document.createElement('span');
         highlightSpan.style.backgroundColor = color;
 
-        const extractedContent = textRange.extractContents();
+        const surroundContent = textRange.extractContents();
 
-        extractedContent.childNodes.forEach(node => {
+        surroundContent.childNodes.forEach(node => {
             if (node.nodeType === Node.ELEMENT_NODE && node.style.backgroundColor) {
                 node.style.backgroundColor = '';
             }
         });
 
-        highlightSpan.appendChild(extractedContent);
+        highlightSpan.appendChild(surroundContent);
 
         textRange.insertNode(highlightSpan);
 
@@ -41,115 +44,66 @@ function highlightSelectedText(color) {
             text: selectedText,
             url: window.location.href,
             color: color,
-            type: 'highlight',
+            type: 'HighlightText',
             timestamp: Date.now()
         };
 
-        chrome.storage.sync.get({ annotations: [] }, (result) => {
-            const annotationsList = result.annotations;
-            annotationsList.push(newAnnotation);
-            chrome.storage.sync.set({ annotations: annotationsList });
+        chrome.storage.sync.get({ annotations: [] }, function(data) {
+            let annotationsArray = data.annotations;
+            annotationsArray.push(newAnnotation);
+            chrome.storage.sync.set({ annotations: annotationsArray });
         });
-
     } else {
         alert('Please select the text to be highlighted.');
     }
 }
 
-// function highlightselectedText(color) {
-//     const userSelection = window.getSelection();
-//     if (!userSelection.rangeCount) {
-//         alert('Please select the text to be highlighted.');
-//         return;
-//     }
-
-//     const range = userSelection.getRangeAt(0);
-//     const textSelected = range.toString();
-
-//     if (textSelected) {
-//         const span = document.createElement('span');
-//         span.style.backgroundColor = color;
-
-//         const documentFragment = range.extractContents();
-
-//         documentFragment.childNodes.forEach(node => {
-//             if (node.nodeType === 1 && node.style.backgroundColor) {
-//                 node.style.backgroundColor = '';
-//             }
-//         });
-
-//         span.appendChild(documentFragment);
-
-//         range.insertNode(span);
-
-//         userSelection.removeAllRanges();
-
-//         const annotation = {
-//             text: textSelected,
-//             url: window.location.href,
-//             color: color,
-//             type: 'HighlightText',
-//             timestamp: Date.now() 
-//         };
-
-//         chrome.storage.sync.get({ annotations: [] }, (data) => {
-//             const annotations = data.annotations;
-//             annotations.push(annotation);
-//             chrome.storage.sync.set({ annotations: annotations });
-//         });
-
-//     }
-//     else {
-//         alert('Please select the text to be highlighted.');
-//     }
-// }
-
-
-
-console.log("Content Script Loaded");
-
 function addNoteToSelectedText(color) {
-    const userSelection = window.getSelection();
-    if (userSelection.rangeCount > 0) {
-        const range = userSelection.getRangeAt(0);
-        const textSelected = range.toString();
-        const note = document.createElement('div');
-        note.contentEditable = true;
-        note.style.border = '2px solid grey';
-        note.style.backgroundColor = color;
-        note.style.display = 'inline-block';
-        note.style.marginLeft = '7px';
-        note.style.padding = '4px';
-        note.style.fontSize = '0.9em';
-        note.textContent = 'Enter your Comment:';
-        range.collapse(false);
-        range.insertNode(note);
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+        const textRange = selection.getRangeAt(0);
+        const selectedText = textRange.toString();
+    
 
-        const annotation = {
-            text: note.textContent,
+        const noteElement = document.createElement('div');
+        noteElement.contentEditable = true;
+        noteElement.textContent = 'Enter your Comment:';
+        noteElement.style.border = '2px solid grey';
+        noteElement.style.borderRadius='10px';
+        noteElement.style.backgroundColor = '#ffffff';
+        noteElement.style.display = 'inline-block';
+        noteElement.style.marginLeft = '7px';
+        noteElement.style.padding = '4px';
+        noteElement.style.fontSize = '0.9em';
+        textRange.collapse(false);
+        textRange.insertNode(noteElement);
+
+        const annotationDetails = {
+            text: noteElement.textContent,
             url: window.location.href,
             color: color,
             type: 'note',
-            select: textSelected,
-            timestamp: Date.now() 
+            selectedText: selectedText,
+            timestamp: Date.now()
         };
 
-        chrome.storage.sync.get({ annotations: [] }, (data) => {
-            const annotations = data.annotations;
-            annotations.push(annotation);
-            chrome.storage.sync.set({ annotations: annotations });
+        chrome.storage.sync.get({ annotations: [] }, function(data) {
+            const annotationsArray = data.annotations;
+            annotationsArray.push(annotationDetails);
+            chrome.storage.sync.set({ annotations: annotationsArray });
         });
 
-        note.addEventListener('input', () => {
-            annotation.text = note.textContent;
-            chrome.storage.sync.get({ annotations: [] }, (data) => {
-                const annotations = data.annotations;
-                const index = annotations.findIndex(a => a.timestamp === annotation.timestamp);
+
+        noteElement.addEventListener('input', function() {
+            annotationDetails.text = noteElement.textContent;
+            chrome.storage.sync.get({ annotations: [] }, function(result) {
+                let annotationsList = result.annotations;
+                let index = annotationsList.findIndex(a => a.timestamp === annotationDetails.timestamp);
                 if (index > -1) {
-                    annotations[index] = annotation;
-                    chrome.storage.sync.set({ annotations: annotations });
+                    annotationsList[index] = annotationDetails;
+                    chrome.storage.sync.set({ annotations: annotationsList });
                 }
             });
-        });
+        });        
     }
 }
