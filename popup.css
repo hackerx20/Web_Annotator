@@ -34,13 +34,7 @@ html body {
     align-items: center;
 }
 
-/* body {
-    width: 360px;
-    padding: 30px;
-    padding-left: 0px;
-    background-color: white;
 
-} */
 
 .container .Heading {
     padding: 10px;
@@ -59,10 +53,6 @@ html body {
     font-size: 25px;
     letter-spacing: 1px;
 }
-
-/* .highlightColor{
-    border-color: #121212;
-} */
 .Features {
     list-style-type: none;
     display: flex;
@@ -102,7 +92,13 @@ li.lastButton {
     background-color: transparent;
     font-size: 15px;
 }
-
+.boxitems{
+    border: 4px solid white;
+    border-radius: 10px;
+}
+#annotationItems{
+    list-style-type:square;
+}
 .button-64 {
     align-items: center;
     background-image: linear-gradient(144deg, #AF40FF, #5B42F3 50%, #00DDEB);
@@ -155,7 +151,7 @@ li.lastButton {
 }
 
 .footer {
-    position: sticky;
+    position:sticky;
     bottom: 0;
     left: 0;
     width: inherit;
@@ -166,13 +162,11 @@ li.lastButton {
     color: aliceblue;
     font-size: 14px;
 }
-
 .fa-chevron-down {
     margin-left: 5px;
     color: #2196f3;
 }
-
-.footer-header {
+.footer-header{
     padding: 10px;
 }
 
