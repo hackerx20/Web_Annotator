@@ -1,80 +1,118 @@
 <!DOCTYPE html>
 <html>
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="popup.css">
     <title>AnnotateMe</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
-
 <body>
     <div class="container">
-        <h1 class="Heading">AnnotateMe</h1>
-    </div>
-    <div class="container">
-        <label for="highlightColor" class="highlightlabel">Highlight Color:</label>
-        <input type="color" id="highlightColor" name="highlightColor" value="#000000" />
-    </div>
-    <div class="container">
-        <ul class="Features">
-            <li><button class="myButton" id="Highlight"><img src="icons/highlighter(1).png" alt="highlighter"
-                        title="Highlighter"></button></li>
-            <li><button class="myButton" id="AddNote"><img src="icons/add(1).png" alt="Add Notes"
-                        title="Add Notes"></button></li>
-            <li class="lastButton" id="Save"><button class="myButton"><img src="icons/diskette.png" alt="Save"
-                        title="Save"></button></li>
-        </ul>
-    </div>
-    <div class="container Features">
-        <input type="search" class="searchinput" id="mySearch" placeholder="Search for something..">
-        <button class="myButton" id="Search"><img src="icons/research.png" alt="Search" title="Search"></button>
-    </div>
-    <div <button class="button-64" role="button" id="exportFiles"><span class="text"><b>Export Files</b></span></button>
-    </div>
-    <div class="boxitems">
-        <ul id="annotationItems"></ul>
-    </div>
-    <footer class="footer">
-        <p class="footer-header">
-            Instructions <i class="fa fa-chevron-up instructions-up"></i><i
-                class="fa fa-chevron-down instructions-down"></i>
-        </p>
-        <div class="instructions">
-            <ol>
-                <h4><u><b>Highlight</b></u></h4>
-                <li>Drag your cursor over text to select it</li>
-                <li>
-                    (Mac) Press
-                    <span style="text-decoration: underline">Command + H</span> on keyboard
-                </li>
-                <li>
-                    (Desktop) Press
-                    <span style="text-decoration: underline">Ctrl + Shift +H</span> on keyboard
-                </li>
-                <h4><u><b>Add Notes</b></u></h4>
-                <li>Drag your cursor over text to select it</li>
-                <li>
-                    (Mac) Press
-                    <span style="text-decoration: underline">Command + A</span> on keyboard
-                </li>
-                <li>
-                    (Desktop) Press
-                    <span style="text-decoration: underline">Ctrl + A</span> on keyboard
-                </li>
-                <h4><u><b>Save</b></u></h4>
-                <li>
-                    <span style="text-decoration: underline">Press the Save Button</span>
-                </li>
-            </ol>
-            <p style="color: yellow; font-size: 11px">
-                <b>* Cannot highlight across line breaks</b>
-            </p>
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <span class="logo-icon">📝</span>
+                <h1 class="title">AnnotateMe</h1>
+            </div>
+            <div class="version">v2.0</div>
         </div>
-    </footer>
+
+        <!-- Color Picker Section -->
+        <div class="color-section">
+            <label for="highlightColor" class="color-label">
+                <span class="material-icons">palette</span>
+                Highlight Color
+            </label>
+            <div class="color-picker-wrapper">
+                <input type="color" id="highlightColor" name="highlightColor" value="#fbbf24" />
+                <div class="color-presets">
+                    <button class="color-preset" data-color="#fbbf24" style="background: #fbbf24;" title="Yellow"></button>
+                    <button class="color-preset" data-color="#34d399" style="background: #34d399;" title="Green"></button>
+                    <button class="color-preset" data-color="#60a5fa" style="background: #60a5fa;" title="Blue"></button>
+                    <button class="color-preset" data-color="#f87171" style="background: #f87171;" title="Red"></button>
+                    <button class="color-preset" data-color="#a78bfa" style="background: #a78bfa;" title="Purple"></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="actions">
+            <button class="action-btn primary" id="Highlight">
+                <span class="material-icons">highlight</span>
+                <span>Highlight</span>
+                <kbd>Ctrl+Shift+H</kbd>
+            </button>
+            <button class="action-btn secondary" id="AddNote">
+                <span class="material-icons">note_add</span>
+                <span>Add Note</span>
+                <kbd>Ctrl+A</kbd>
+            </button>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-wrapper">
+                <span class="material-icons search-icon">search</span>
+                <input type="search" id="mySearch" placeholder="Search annotations..." />
+                <button class="search-btn" id="Search">
+                    <span class="material-icons">search</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Export Button -->
+        <button class="export-btn" id="exportFiles">
+            <span class="material-icons">download</span>
+            <span>Export Annotations</span>
+        </button>
+
+        <!-- Annotations List -->
+        <div class="annotations-container">
+            <div class="annotations-header">
+                <h3>Recent Annotations</h3>
+                <span class="annotations-count" id="annotationsCount">0</span>
+            </div>
+            <div class="annotations-list" id="annotationItems">
+                <div class="empty-state">
+                    <span class="material-icons">note_alt</span>
+                    <p>No annotations yet</p>
+                    <small>Start highlighting text to see your annotations here</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions Footer -->
+        <div class="instructions-toggle" id="instructionsToggle">
+            <span>Quick Guide</span>
+            <span class="material-icons toggle-icon">expand_more</span>
+        </div>
+        
+        <div class="instructions" id="instructions">
+            <div class="instruction-group">
+                <h4><span class="material-icons">highlight</span> Highlighting</h4>
+                <ul>
+                    <li>Select text on any webpage</li>
+                    <li>Press <kbd>Ctrl+Shift+H</kbd> (Windows) or <kbd>Cmd+H</kbd> (Mac)</li>
+                    <li>Or click the Highlight button</li>
+                </ul>
+            </div>
+            <div class="instruction-group">
+                <h4><span class="material-icons">note_add</span> Adding Notes</h4>
+                <ul>
+                    <li>Select text on any webpage</li>
+                    <li>Press <kbd>Ctrl+A</kbd> (Windows) or <kbd>Cmd+A</kbd> (Mac)</li>
+                    <li>Or click the Add Note button</li>
+                </ul>
+            </div>
+            <div class="tip">
+                <span class="material-icons">lightbulb</span>
+                <span>Tip: Your annotations are automatically saved and will persist across page reloads!</span>
+            </div>
+        </div>
+    </div>
+
     <script src="popup.js"></script>
 </body>
-
 </html>

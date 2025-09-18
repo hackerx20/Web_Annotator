@@ -1,13 +1,14 @@
 {
     "manifest_version": 3,
     "name": "AnnotateMe",
-    "version": "2",
-    "description": "Highlight and add notes to any text on the web with AnnotateMe",
+    "version": "2.1",
+    "description": "Modern web annotation tool - highlight text and add notes that persist across page reloads",
     "permissions": [
         "activeTab",
         "scripting",
         "storage",
-        "commands"
+        "commands",
+        "tabs"
     ],
     "action": {
         "default_popup": "popup.html",
@@ -21,7 +22,7 @@
         "service_worker": "background.js"
     },
     "commands": {
-        "HighlightText": {
+        "HighLightText": {
             "suggested_key": {
                 "default": "Ctrl+Shift+H",
                 "mac": "Command+H"
@@ -30,8 +31,8 @@
         },
         "AddNotes": {
             "suggested_key": {
-                "default": "Ctrl+A",
-                "mac": "Command+A"
+                "default": "Ctrl+Shift+N",
+                "mac": "Command+Shift+N"
             },
             "description": "Add note to selected text"
         }
@@ -50,7 +51,7 @@
             "js": [
                 "content.js"
             ],
-            "css": ["popup.css"]
+            "all_frames": false
         }
     ]
 }
