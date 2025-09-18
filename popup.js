@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize UI
+    // Initialize the popup
     initializeColorPicker();
     initializeEventListeners();
     loadAndDisplayAnnotations();
     updateAnnotationsCount();
 
-    // Color picker initialization
+    // Color picker functionality
     function initializeColorPicker() {
         chrome.storage.sync.get('highlightColor', (data) => {
             const color = data.highlightColor || '#fbbf24';
@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Search functionality
         document.getElementById('Search').addEventListener('click', performSearch);
+        document.getElementById('mySearch').addEventListener('input', debounce(performSearch, 300));
         document.getElementById('mySearch').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 performSearch();
@@ -59,8 +60,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // Export functionality
         document.getElementById('exportFiles').addEventListener('click', exportAnnotations);
 
-        // Instructions toggle
-        document.getElementById('instructionsToggle').addEventListener('click', toggleInstructions);
+        // Help toggle
+        document.getElementById('helpToggle').addEventListener('click', toggleHelp);
+    }
+
+    // Debounce function for search
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
     }
 
     function executeAction(action) {
@@ -75,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 target: { tabId: tabs[0].id },
                                 files: ['content.js']
                             }, () => {
-                                // Retry after injection
                                 setTimeout(() => {
                                     chrome.tabs.sendMessage(tabs[0].id, { action: action, color: color });
                                 }, 100);
@@ -128,9 +141,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (annotations.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
-                    <span class="material-icons">note_alt</span>
-                    <p>No annotations found</p>
-                    <small>Try adjusting your search or start annotating</small>
+                    <div class="empty-icon">📝</div>
+                    <h3>No annotations found</h3>
+                    <p>Try adjusting your search or start annotating pages</p>
                 </div>
             `;
             return;
@@ -146,23 +159,28 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const dateAnnotations = groupedAnnotations[date]
                 .sort((a, b) => b.timestamp - a.timestamp)
-                .slice(0, 5); // Show max 5 per date
+                .slice(0, 10); // Show max 10 per date
 
             dateAnnotations.forEach(annotation => {
                 const hostname = new URL(annotation.url).hostname;
                 const text = annotation.type === 'note' 
-                    ? `Note: ${annotation.text}`
-                    : `Highlight: ${annotation.text}`;
+                    ? `📝 ${annotation.text}`
+                    : `🎨 ${annotation.text}`;
                 
                 html += `
                     <div class="annotation-item">
                         <div class="annotation-content">
                             <div>
-                                <div class="annotation-text">${truncateText(text, 100)}</div>
+                                <div class="annotation-text">${truncateText(text, 120)}</div>
                                 <div class="annotation-url">${hostname}</div>
                             </div>
-                            <button class="delete-btn" data-timestamp="${annotation.timestamp}">
-                                <span class="material-icons">delete</span>
+                            <button class="delete-btn" data-timestamp="${annotation.timestamp}" title="Delete annotation">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="3,6 5,6 21,6"></polyline>
+                                    <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
                             </button>
                         </div>
                     </div>
@@ -205,6 +223,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function deleteAnnotation(timestamp) {
+        if (!confirm('Are you sure you want to delete this annotation?')) {
+            return;
+        }
+
         chrome.storage.sync.get({ annotations: [] }, (data) => {
             const annotations = data.annotations;
             const updatedAnnotations = annotations.filter(annotation => 
@@ -213,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             chrome.storage.sync.set({ annotations: updatedAnnotations }, () => {
                 loadAndDisplayAnnotations();
-                showNotification('Annotation deleted', 'success');
+                showNotification('Annotation deleted successfully', 'success');
             });
         });
     }
@@ -239,8 +261,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Create enhanced export data
             const exportData = {
-                exportDate: new Date().toISOString(),
-                totalAnnotations: annotations.length,
+                exportInfo: {
+                    date: new Date().toISOString(),
+                    totalAnnotations: annotations.length,
+                    version: '2.1'
+                },
                 annotations: annotations.map(annotation => ({
                     ...annotation,
                     formattedDate: new Date(annotation.timestamp).toLocaleString(),
@@ -254,83 +279,86 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const a = document.createElement('a');
             a.href = url;
-            a.download = `annotations-${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `annotateme-export-${new Date().toISOString().split('T')[0]}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
 
-            showNotification(`Exported ${annotations.length} annotations`, 'success');
+            showNotification(`Successfully exported ${annotations.length} annotations`, 'success');
         });
     }
 
-    function toggleInstructions() {
-        const toggle = document.getElementById('instructionsToggle');
-        const instructions = document.getElementById('instructions');
+    function toggleHelp() {
+        const toggle = document.getElementById('helpToggle');
+        const content = document.getElementById('helpContent');
         
         toggle.classList.toggle('active');
-        instructions.classList.toggle('show');
+        content.classList.toggle('show');
     }
 
     function showNotification(message, type = 'info') {
-        // Create notification element
+        // Remove existing notifications
+        const existing = document.querySelectorAll('.popup-notification');
+        existing.forEach(n => n.remove());
+
         const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
+        notification.className = `popup-notification ${type}`;
         notification.textContent = message;
         
-        // Style the notification
-        Object.assign(notification.style, {
-            position: 'fixed',
-            top: '10px',
-            right: '10px',
-            padding: '12px 16px',
-            borderRadius: '8px',
-            color: 'white',
-            fontSize: '14px',
-            fontWeight: '500',
-            zIndex: '10000',
-            maxWidth: '300px',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            animation: 'slideIn 0.3s ease'
-        });
-
-        // Set background color based on type
         const colors = {
             success: '#10b981',
             error: '#ef4444',
             warning: '#f59e0b',
             info: '#3b82f6'
         };
-        notification.style.backgroundColor = colors[type] || colors.info;
+
+        Object.assign(notification.style, {
+            position: 'fixed',
+            top: '16px',
+            right: '16px',
+            left: '16px',
+            padding: '12px 16px',
+            borderRadius: '8px',
+            backgroundColor: colors[type] || colors.info,
+            color: 'white',
+            fontSize: '14px',
+            fontWeight: '500',
+            zIndex: '10000',
+            textAlign: 'center',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            animation: 'slideDown 0.3s ease',
+            pointerEvents: 'none'
+        });
+
+        // Add animation styles if not present
+        if (!document.querySelector('#popup-notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'popup-notification-styles';
+            style.textContent = `
+                @keyframes slideDown {
+                    from { transform: translateY(-100%); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
+                }
+                @keyframes slideUp {
+                    from { transform: translateY(0); opacity: 1; }
+                    to { transform: translateY(-100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
 
         document.body.appendChild(notification);
 
         // Remove after 3 seconds
         setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease';
+            notification.style.animation = 'slideUp 0.3s ease';
             setTimeout(() => {
                 if (notification.parentNode) {
                     notification.remove();
                 }
             }, 300);
         }, 3000);
-    }
-
-    // Add CSS for notification animations
-    if (!document.querySelector('#notification-styles')) {
-        const style = document.createElement('style');
-        style.id = 'notification-styles';
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
     }
 
     // Listen for storage changes to update UI

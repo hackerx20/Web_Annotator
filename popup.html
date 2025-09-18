@@ -1,116 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="popup.css">
     <title>AnnotateMe</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-    <div class="container">
+    <div class="app-container">
         <!-- Header -->
-        <div class="header">
-            <div class="logo">
-                <span class="logo-icon">📝</span>
-                <h1 class="title">AnnotateMe</h1>
-            </div>
-            <div class="version">v2.0</div>
-        </div>
-
-        <!-- Color Picker Section -->
-        <div class="color-section">
-            <label for="highlightColor" class="color-label">
-                <span class="material-icons">palette</span>
-                Highlight Color
-            </label>
-            <div class="color-picker-wrapper">
-                <input type="color" id="highlightColor" name="highlightColor" value="#fbbf24" />
-                <div class="color-presets">
-                    <button class="color-preset" data-color="#fbbf24" style="background: #fbbf24;" title="Yellow"></button>
-                    <button class="color-preset" data-color="#34d399" style="background: #34d399;" title="Green"></button>
-                    <button class="color-preset" data-color="#60a5fa" style="background: #60a5fa;" title="Blue"></button>
-                    <button class="color-preset" data-color="#f87171" style="background: #f87171;" title="Red"></button>
-                    <button class="color-preset" data-color="#a78bfa" style="background: #a78bfa;" title="Purple"></button>
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">📝</div>
+                    <h1 class="app-title">AnnotateMe</h1>
                 </div>
+                <div class="version-badge">v2.1</div>
             </div>
-        </div>
+        </header>
 
-        <!-- Action Buttons -->
-        <div class="actions">
-            <button class="action-btn primary" id="Highlight">
-                <span class="material-icons">highlight</span>
-                <span>Highlight</span>
-                <kbd>Ctrl+Shift+H</kbd>
-            </button>
-            <button class="action-btn secondary" id="AddNote">
-                <span class="material-icons">note_add</span>
-                <span>Add Note</span>
-                <kbd>Ctrl+A</kbd>
-            </button>
-        </div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Quick Actions -->
+            <section class="quick-actions">
+                <div class="color-selector">
+                    <label class="color-label">Choose Color</label>
+                    <div class="color-options">
+                        <input type="color" id="highlightColor" value="#fbbf24" class="color-input">
+                        <div class="color-presets">
+                            <button class="color-preset active" data-color="#fbbf24" style="background: #fbbf24;"></button>
+                            <button class="color-preset" data-color="#34d399" style="background: #34d399;"></button>
+                            <button class="color-preset" data-color="#60a5fa" style="background: #60a5fa;"></button>
+                            <button class="color-preset" data-color="#f87171" style="background: #f87171;"></button>
+                            <button class="color-preset" data-color="#a78bfa" style="background: #a78bfa;"></button>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Search Section -->
-        <div class="search-section">
-            <div class="search-wrapper">
-                <span class="material-icons search-icon">search</span>
-                <input type="search" id="mySearch" placeholder="Search annotations..." />
-                <button class="search-btn" id="Search">
-                    <span class="material-icons">search</span>
+                <div class="action-buttons">
+                    <button class="action-btn highlight-btn" id="Highlight">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="m9 11-6 6v3h3l6-6"></path>
+                            <path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"></path>
+                        </svg>
+                        <span>Highlight</span>
+                        <kbd class="shortcut">Ctrl+Shift+H</kbd>
+                    </button>
+                    
+                    <button class="action-btn note-btn" id="AddNote">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                            <polyline points="14,2 14,8 20,8"></polyline>
+                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                        <span>Add Note</span>
+                        <kbd class="shortcut">Ctrl+Shift+N</kbd>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-container">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="search" id="mySearch" placeholder="Search annotations..." class="search-input">
+                    <button class="search-btn" id="Search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Export Section -->
+            <section class="export-section">
+                <button class="export-btn" id="exportFiles">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7,10 12,15 17,10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>Export Annotations</span>
                 </button>
-            </div>
-        </div>
+            </section>
 
-        <!-- Export Button -->
-        <button class="export-btn" id="exportFiles">
-            <span class="material-icons">download</span>
-            <span>Export Annotations</span>
-        </button>
+            <!-- Annotations List -->
+            <section class="annotations-section">
+                <div class="section-header">
+                    <h2 class="section-title">Your Annotations</h2>
+                    <span class="annotations-count" id="annotationsCount">0</span>
+                </div>
+                
+                <div class="annotations-list" id="annotationItems">
+                    <div class="empty-state">
+                        <div class="empty-icon">📝</div>
+                        <h3>No annotations yet</h3>
+                        <p>Start highlighting text or adding notes to see them here</p>
+                    </div>
+                </div>
+            </section>
+        </main>
 
-        <!-- Annotations List -->
-        <div class="annotations-container">
-            <div class="annotations-header">
-                <h3>Recent Annotations</h3>
-                <span class="annotations-count" id="annotationsCount">0</span>
-            </div>
-            <div class="annotations-list" id="annotationItems">
-                <div class="empty-state">
-                    <span class="material-icons">note_alt</span>
-                    <p>No annotations yet</p>
-                    <small>Start highlighting text to see your annotations here</small>
+        <!-- Footer -->
+        <footer class="app-footer">
+            <button class="help-toggle" id="helpToggle">
+                <svg class="help-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <span>Quick Help</span>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polyline points="6,9 12,15 18,9"></polyline>
+                </svg>
+            </button>
+            
+            <div class="help-content" id="helpContent">
+                <div class="help-item">
+                    <h4>🎯 Highlighting</h4>
+                    <p>Select text → Press <kbd>Ctrl+Shift+H</kbd> or click Highlight button</p>
+                </div>
+                <div class="help-item">
+                    <h4>📝 Adding Notes</h4>
+                    <p>Select text → Press <kbd>Ctrl+Shift+N</kbd> or click Add Note button</p>
+                </div>
+                <div class="help-tip">
+                    <strong>💡 Pro Tip:</strong> Your annotations automatically save and persist across page reloads!
                 </div>
             </div>
-        </div>
-
-        <!-- Instructions Footer -->
-        <div class="instructions-toggle" id="instructionsToggle">
-            <span>Quick Guide</span>
-            <span class="material-icons toggle-icon">expand_more</span>
-        </div>
-        
-        <div class="instructions" id="instructions">
-            <div class="instruction-group">
-                <h4><span class="material-icons">highlight</span> Highlighting</h4>
-                <ul>
-                    <li>Select text on any webpage</li>
-                    <li>Press <kbd>Ctrl+Shift+H</kbd> (Windows) or <kbd>Cmd+H</kbd> (Mac)</li>
-                    <li>Or click the Highlight button</li>
-                </ul>
-            </div>
-            <div class="instruction-group">
-                <h4><span class="material-icons">note_add</span> Adding Notes</h4>
-                <ul>
-                    <li>Select text on any webpage</li>
-                    <li>Press <kbd>Ctrl+A</kbd> (Windows) or <kbd>Cmd+A</kbd> (Mac)</li>
-                    <li>Or click the Add Note button</li>
-                </ul>
-            </div>
-            <div class="tip">
-                <span class="material-icons">lightbulb</span>
-                <span>Tip: Your annotations are automatically saved and will persist across page reloads!</span>
-            </div>
-        </div>
+        </footer>
     </div>
 
     <script src="popup.js"></script>
